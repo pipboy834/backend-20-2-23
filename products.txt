@@ -1,0 +1,26 @@
+[
+    {
+        title: "sandia"
+        description: "verde de estacion"
+        price: 500
+        thumbnail: "no tiene"
+        stock: 2000
+        id: 1
+    },
+    {
+        title: "manzana"
+        description: "roja de estacion"
+        price: 300
+        thumbnail: "no tiene"
+        stock: 5000
+        id:2
+    },
+    {
+        title: "banana"
+        description: "de ecuador"
+        price: 350
+        thumbnail: "no tiene"
+        stock: 1000
+        id:3
+    }
+]

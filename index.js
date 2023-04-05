@@ -1,38 +1,50 @@
+const fs = require('fs')
+
+
+
+
 class ProductManager {
-    
-    constructor() {
-        this.products=[]
+    constructor(file){
+        this.file= file
     }
-    getProducts = () => {
-        return this.products;
-    }
-    addProduct = (title, description, price, thumbnail, stock ) => {
-        const product = {
-            id : this.products.length + 1,
-            title,
-            description,
-            price,
-            thumbnail,
-            stock,
-        }
-        this.products.push(product)
 
-    }
-    searchProductById = (valorId) => {
-        const product = this.products.find((product) => product.id === valorId)
-        if (product){
-            return product
-        } else {
-            console.error ("product does not exist")
-            return null
+    writeFile = async data => {
+        try {
+            await fs.promises.writeFile(
+                this.file, JSON.stringify(data, null, 2)
+            )
+
+        }catch (err) {
+            console.log(`error: ${err}`)
         }
-        
-    } 
+    }
+    getAll = async () =>{
+        try{
+            const productos = await fs.promises.readFile(this.file, 'utf-8')
+            return JSON.parse(productos)
+        }catch (err){
+            if(err.message.includes('no such file or directory')) return []
+            console.log(`error: ${err}`)
+        }
+    }
+    getById= async id =>{
+        let productos = await this.getAll()
+        try{
+            const obj = productos.find(id => productos.id === id)
+            return obj ? obj : null
+            
+        }catch(err){
+            console.log(`error : ${err}`)
+        }
+    }
+    deleteById = async id => {
+        let productos = await this.getAll()
+        try {
+            productos = productos.filter(producto => producto.id !=id)
+            await this.writeFile(productos)
+        }catch(err) {
+            console.log(`error: ${err}`)
+        }
+    }
 }
-const productManager = new ProductManager ()
-
-
-productManager.addProduct("sandia", "verde", 500, "https", 50)
-productManager.addProduct("banana", "verde", 300, "https", 60)
-console.log (productManager.searchProductById(2))
-console.log(productManager.getProducts())
+module.exports = ProductManager
